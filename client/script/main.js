@@ -7,7 +7,7 @@ window.addEventListener("DOMContentLoaded",function(){
 
     // 할 일
     loadBtn.addEventListener("click", function(){
-        loadBtn.disabled = flase;
+        loadBtn.disabled = false;
 
         // 데이터 수신(= data fetching)
         const result = fetch("http://localhost:3000/getAllUsers").then((res) => res.json()).then((data) => {
