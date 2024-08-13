@@ -31,7 +31,7 @@ const pool = mariadb.createPool({
 app.get('/getAllUsers', function (req, res) {
   pool.getConnection()
     .then(conn => {   
-      console.log("=================== MariaDB is connected! ==============");
+      console.log("============== MariaDB is connected! ==============");
       conn.query("SELECT * FROM users")
         .then((rows) => {
           res.status(200).json(rows);
@@ -49,6 +49,11 @@ app.get('/getAllUsers', function (req, res) {
   //res.send('Hello World')
 })
 
-app.listen(3000,() => {
-  console.log("Server is running on port 3000");
-})
+// es6 : import(가져오기), export(내보내기)
+// CommonJS : require(가져오기), module.exports 또는 exports (내보내기)
+const port = 3000; // 개발중 : 3000, 개발완료 : 8080 or ..
+const setting = {
+  app,
+  port
+}
+export default setting; // 11번 라인 express 생성자로 만든 app을 내보내기
