@@ -21,7 +21,7 @@ const getAllUsers = async () => {
     } catch (err) {
         console.log(err);
     } finally {
-        if(conn) conn.end();
+        if (conn) conn.end();
     }
 }
 
@@ -34,20 +34,23 @@ const getOneUser = async (userId) => {
     } catch (err) {
         console.log(err);
     } finally {
-        if(conn) conn.end();
+        if (conn) conn.end();
     }
 }
 
-const addOneUser = async (userId, userName, userEmail) => {
+const addUser = async (id, pwd, name, nick, email, hint) => {
     let conn; // 연결 설정 변수(연결 POOL)
+    const saltRounds = 10;
+    const hashedPwd = await bcrypt.hash(pwd, saltRounds); // 해싱된 비밀번호 생성
     try {
         conn = await pool.getConnection();
-        const rows = await conn.query("INSERT INTO users(id, name, email) VALUES (?,?,?)", [userId, userName, userEmail]); //바인드 변수
+        const rows = await conn.query("INSERT INTO users(id, pwd, name, nickname, email, pwd_hint) VALUES (?,?,?,?,?,?)", [id, hashedPwd, name, nick, email, hint]); //바인드 변수
         return rows;
     } catch (err) {
         console.log(err);
     } finally {
-        if(conn) conn.end();
+        if (conn) conn.end(); // .end() : 연결 중단 vs .release() : 연결 해제
+        // pool 자체 종료 --> 시간, 네트워크 --> 개발 비용의 증가
     }
 }
 
@@ -56,7 +59,7 @@ const addOneUser = async (userId, userName, userEmail) => {
 const userModel = {
     getAllUsers,
     getOneUser,
-    addOneUser
+    addUser
 }
 
 export default userModel;
